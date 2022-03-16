@@ -27,23 +27,31 @@ def change_lights():
         print("lights on")
 
 if __name__ == '__main__':
-    port = serial.Serial("/dev/ttyUSB0", baudrate="9600", timeout=3.0)
+    print('1')
+    port = serial.Serial("/dev/ttyUSB1", baudrate="115200", timeout=3.0)
 
     mycursor = mydb.cursor()
 
-    rcv = port.readline().decode('utf-8').rstrip()
+    # rcv = port.readline().decode('utf-8').rstrip()
+    # print(rcv)
 
     while True:
+        rcv = port.readline().decode('utf-8').rstrip()
         if(rcv == "gate1"):
-            if(wait_until(rcv, 5000, "gate2")):
-                mycursor.execute("UPDATE rooms SET people = amount +1;")
-                mydb.commit()
-                change_lights()
+            print("detected")
+            mycursor.execute("UPDATE rooms SET people = people +1;")
+            mydb.commit()
+            rcv = 0
+            
     
         if(rcv == "gate2"):
-            if(wait_until(rcv, 5000, "gate1")):
-                mycursor.execute("UPDATE rooms SET people = amount -1;")
-                mydb.commit()
-                change_lights()   
+            print("detected")
+            mycursor.execute("UPDATE detect SET gate_2 = true;")
+            rcv = 0
+
+            # if(wait_until(rcv, 5000, "gate1")):
+            #     mycursor.execute("UPDATE rooms SET people = amount -1;")
+            #     mydb.commit()
+            #     change_lights()   
 
     mydb.close()
