@@ -19,4 +19,4 @@ Route::get('/', function () {
 
 Route::get('/Nils', function() {
     echo "Hallo Nils";
-})
+});
