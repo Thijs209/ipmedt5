@@ -18,3 +18,4 @@ Route::get('/', [\App\Http\Controllers\RoomController::class, 'show']);
 Route::get('/Nils', function() {
     echo "Hallo Nils";
 });
+// Test
