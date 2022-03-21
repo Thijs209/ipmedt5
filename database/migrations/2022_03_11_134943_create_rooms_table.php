@@ -17,6 +17,8 @@ class CreateRoomsTable extends Migration
             $table->id('roomID');
             $table->string('roomName');
             $table->integer('people');
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->useCurrent();
         });
     }
 
