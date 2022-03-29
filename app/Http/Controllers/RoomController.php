@@ -13,15 +13,19 @@ class RoomController extends Controller
         ]);
     }
 
-    public function add($roomName, $number){
-        DB::table('rooms')->insert([
-            'people' => $number,
-            'roomName' => $roomName
-        ]);
-        return redirect('/addRoom');
+    public function store(Request $request, \App\Models\Room $room){
+        $room->roomName = $request->input('roomName');
+        $room->people = $request->input('people');
+
+        try{
+            $room->save();
+            return redirect('/');
+        } catch(Exception $e){
+            return redirect('/addRoom');
+        }
     }
 
-    public function fillRoom(){
+    public function create(){
         return view('addRoom');
     }
 }
