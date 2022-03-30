@@ -15,6 +15,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [\App\Http\Controllers\RoomController::class, 'show']);
 
+Route::get('/addRoom', [\App\Http\Controllers\RoomController::class, 'create']);
+
+Route::post('/room', [\App\Http\Controllers\RoomController::class, 'store']);
+// Route::get('/addRoom/{roomName}/{number}', [\App\Http\Controllers\RoomController::class, 'add']);
+
 Route::get('/Nils', function() {
     echo "Hallo Nils";
 });
