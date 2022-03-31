@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="nl">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +7,25 @@
     <title>dashboard</title>
 </head>
 <body>
+    
     <h1>Hier komt het dashboard met alle gegevens staan</h1>
-    <p>Aantal personen in kamer: {{$room->people}}</p>
+    <h2>Kamers</h2>
+
+    @foreach($room as $lightRoom)
+        <section>
+            <h3>{{$lightRoom->roomName}}</h3>
+            <p>Huidig aantal personen: {{$lightRoom->people}}</p>
+            <form action='/update' method='POST'>
+                @csrf
+
+                <label for='people'>Personen aanpassen</label>
+                <input id='people' name='people' type='number'}>
+
+                <input type='hidden' id='roomName' name='roomName' value='{{$lightRoom->roomName}}'>
+
+                <button type='submit'>Wijzig</button>
+            </form>
+        </section>
+    @endforeach
 </body>
 </html>
