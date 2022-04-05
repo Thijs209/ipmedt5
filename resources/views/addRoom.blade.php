@@ -7,13 +7,17 @@
     <title>Document</title>
 </head>
 <body>
-    <form action="/room" method="POST">
+    <form class="addRoomForm" action="/room" method="POST">
         @csrf
-        <label for="roomNameField">Kamer Naam</label><br>
-        <input id="roomNameField" name="roomName" type="text"><br>
+        <section class="roomNameSection">
+            <label for="roomNameField">Kamer Naam</label><br>
+            <input id="roomNameField" name="roomName" type="text"><br>
+        </section>
     
-        <label for="numberPeopleField">Hoeval mensen zijn er in de kamer?</label><br>
-        <input id="numberPeopleField" name="people" type="number" value="0"><br>
+        <section class="numberPeopleSection">
+            <label for="numberPeopleField">Hoeval mensen zijn er in de kamer?</label><br>
+            <input id="numberPeopleField" name="people" type="number" value="0"><br>
+        </section>
 
         <input type="submit" value="Submit" id="submit">
     </form>
