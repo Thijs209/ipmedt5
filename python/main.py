@@ -1,3 +1,4 @@
+from cProfile import run
 from multiprocessing.connection import wait
 import serial
 import os
@@ -28,7 +29,7 @@ def change_lights():
 
 if __name__ == '__main__':
     print('1')
-    port = serial.Serial("/dev/ttyUSB1", baudrate="115200", timeout=3.0)
+    port = serial.Serial("/dev/ttyUSB0", baudrate="115200", timeout=3.0)
 
     mycursor = mydb.cursor()
 
@@ -37,16 +38,20 @@ if __name__ == '__main__':
 
     while True:
         rcv = port.readline().decode('utf-8').rstrip()
-        if(rcv == "gate1"):
+        print(rcv)
+        if(rcv == "+1"):
             print("detected")
             mycursor.execute("UPDATE rooms SET people = people +1;")
             mydb.commit()
+            os.system("python mqtt+1.py")
             rcv = 0
             
     
-        if(rcv == "gate2"):
-            print("detected")
-            mycursor.execute("UPDATE detect SET gate_2 = true;")
+        if(rcv == "-1"):
+            print(rcv)
+            mycursor.execute("UPDATE detect SET people = people -1;")
+            os.system("python mqtt.py")
+            mydb.commit()
             rcv = 0
 
             # if(wait_until(rcv, 5000, "gate1")):
