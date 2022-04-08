@@ -14,6 +14,12 @@ class RoomController extends Controller
         ]);
     }
 
+    public function create(){
+        return view('addRoom', [
+            'room' => \App\Models\Room::all()
+        ]);
+    }
+
     public function update(Request $request, \App\Models\Room $room) {
         try{
             $room::where('roomName', $request->roomName)
