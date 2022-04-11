@@ -5,7 +5,7 @@
 #define AP_SSID "TheOtherESP"
 #define AP_PASS "flashmeifyoucan"
  
-// UDP
+// UDP makes acces point
 WiFiUDP UDP;
 IPAddress local_IP(192,168,4,1);
 IPAddress gateway(192,168,4,1);
@@ -15,6 +15,7 @@ IPAddress subnet(255,255,255,0);
 // UDP Buffer
 char packetBuffer[255];
 
+//important variables
 bool check_in= false;
 bool check_out= false;
 int data=0;
@@ -52,11 +53,12 @@ void loop() {
 
   Time = millis();
 
+  //walk in the room
+  //check first detector
+  //for second door copy till line 102 paste and replace gate names
   if (msg == "gate1"){
     check_time= Time;
     check_in= true;
-    Serial.print("hoi1");
-    delay(500);
 
     while(Time<check_time+1200){
       // Receive packet
@@ -65,19 +67,21 @@ void loop() {
     msg = String(packetBuffer); 
 
     Time = millis();
+    //check second detector
       if(msg == "gate2"){
         aantal_mensen++;
-        Serial.println("hoi2");
+        Serial.println("+1");
         check_out=true;
         delay(200);
       }
     }
   }
+
+  //wal out of the room
+  //check second detector
   if (msg == "gate2"){
     check_time= Time;
     check_out= false;
-    Serial.println("hoi2");
-    delay(500);
 
     while(Time<check_time+1200){
 
@@ -87,15 +91,13 @@ void loop() {
       msg = String(packetBuffer); 
       Time = millis();
 
+      //check first detector
       if(msg == "gate1"){
         aantal_mensen--;
-        Serial.println("hoi1");
+        Serial.println("-1");
         check_in=false;
         delay(200);
-//        break;
       }
-//    Serial.println('w');
     }
   } 
-  Serial.println(aantal_mensen);
 }

@@ -12,7 +12,7 @@ const int echoPinS2 = 14;
 #define WIFI_SSID "TheOtherESP"
 #define WIFI_PASS "flashmeifyoucan"
 
-// UDP
+// UDP communication with other esp
 WiFiUDP UDP;
 IPAddress remote_IP(192,168,4,1);
 #define UDP_PORT 4210
@@ -23,11 +23,7 @@ IPAddress remote_IP(192,168,4,1);
 //average distance
 int avgS1;
 int avgS2;
-
-//ime for calibration
-int Hours = 14;
-int Minutes = 43;
-int Seconds = 30;
+int detected = 0;
 
 void setup() {
   //Serial start
@@ -65,21 +61,35 @@ void setup() {
   
   //load and calibrate sensor
   Serial.println("loading sensors");
+  UDP.beginPacket(remote_IP, UDP_PORT);
+  UDP.write("calB");
+  UDP.endPacket();
+  delay(10);
+  UDP.beginPacket(remote_IP, UDP_PORT);
+  UDP.write("00000");
+  UDP.endPacket();
   avgS1 = calibrateSensor(trigPinS1, echoPinS1);
   avgS2 = calibrateSensor(trigPinS2, echoPinS2);
+  UDP.beginPacket(remote_IP, UDP_PORT);
+  UDP.write("calD");
+  UDP.endPacket();
+  delay(10);
+  UDP.beginPacket(remote_IP, UDP_PORT);
+  UDP.write("00000");
+  UDP.endPacket();
 }
 
+//keeps checking distance
 void loop() {
-  //tijd gevoelige acties uitvoeren
   checkDistance();
-  
+  delay(100);
 }
 
-
-
+//check dinstance
 void checkDistance(){
   int s1 = readDistance(trigPinS1, echoPinS1);
   int s2 = readDistance(trigPinS2, echoPinS2);
+  
   Serial.print("S1: ");
   Serial.println(s1);
   Serial.print("S2: ");
@@ -89,21 +99,24 @@ void checkDistance(){
   Serial.print("avgS2: ");
   Serial.println(avgS2);
   if(s1 < avgS1*0.75 && s2 < avgS2*0.75){
-    Serial.println("detected");
-    // Send Packet
-  UDP.beginPacket(remote_IP, UDP_PORT);
-  UDP.write("gate4");
-  UDP.endPacket();
-  delay(10);
-  UDP.beginPacket(remote_IP, UDP_PORT);
-  UDP.write("00000");
-  UDP.endPacket();
-  delay(500);
+    detected = detected + 1;
+    Serial.println(detected);
+  }
+  if(detected >= 5){
+    Serial.print("detected");
+    UDP.beginPacket(remote_IP, UDP_PORT);
+    UDP.write("gate1"); //name of detector, for seconde detector gate2, thirde gate3 etc..
+    UDP.endPacket();
+    delay(10);
+    UDP.beginPacket(remote_IP, UDP_PORT);
+    UDP.write("00000");
+    UDP.endPacket();
+    detected = 0;
   }
 }
 
 
-//afstand tot sensor bepalen
+//read disrance from sencor to floor
 int readDistance(int trig, int echo){
   long duration;
   int distanceCm;
@@ -119,17 +132,17 @@ int readDistance(int trig, int echo){
 }
 
 
-//individuele sensor caliberen
+//calibrate each sensor
 int calibrateSensor(int trig, int echo){
   Serial.println("calibrating Sensor");
   int reading = 0;
   int readingTotal = 0;
-  for(int i=0; i <= 30; i++){
+  for(int i=0; i <= 300; i++){
     reading = readDistance(trig, echo);
     readingTotal = readingTotal + reading;
     Serial.print(".");
-    delay(1000);
+    delay(100);
   }
-  int avg = readingTotal/30;
+  int avg = readingTotal/300;
   return avg;
 }
