@@ -13,7 +13,7 @@
             <label for="roomID">Kamer Nummer</label><br>
             <select name="roomID" id="roomID">
                 @foreach ($rooms as $room)
-                    <option value="{{$room->roomID}}">{{$room->roomID}}</option> 
+                    <option value="{{$room->roomID}}">{{$room->roomName}}</option> 
                 @endforeach
             </select>
         </section>
