@@ -39,18 +39,18 @@ if __name__ == '__main__':
     while True:
         rcv = port.readline().decode('utf-8').rstrip()
         print(rcv)
-        if(rcv == "+1"):
-            print("detected")
+        if(rcv == "hoi2"):
+            print("detected2")
             mycursor.execute("UPDATE rooms SET people = people +1;")
             mydb.commit()
             os.system("python mqtt+1.py")
             rcv = 0
             
     
-        if(rcv == "-1"):
-            print(rcv)
+        if(rcv == "hoi1"):
+            print("detected1")
             mycursor.execute("UPDATE detect SET people = people -1;")
-            os.system("python mqtt.py")
+            os.system("/python/python mqtt.py")
             mydb.commit()
             rcv = 0
 

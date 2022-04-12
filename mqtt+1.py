@@ -17,6 +17,7 @@ import time
 import paho.mqtt.client as paho
 from paho import mqtt
 import json
+import sys
 
 # setting callbacks for different events to see if it works, print the message etc.
 def on_connect(client, userdata, flags, rc, properties=None):
@@ -61,8 +62,8 @@ client.subscribe("domoticz/in", qos=1)
 # a single publish, this can also be done in loops, etc.
 client.publish("encyclopedia/temperature", payload="cold", qos=1)
 client.publish("domoticz/in", json.dumps({'idx' : 1, 'nvalue' : 0, 'svalue' : '25.0' }), qos=1)
-
-client.publish("{ 'idx' : 1, 'nvalue' : 0, 'svalue' : '25.0' }", "domoticz/in")
+sys.exit('sent')
+client.publish("{ 'idx' : 1, 'nvalue' : 0, 'svalue' : '0.0' }", "domoticz/in")
 
 # loop_forever for simplicity, here you need to stop the loop manually
 # you can also use loop_start and loop_stop
