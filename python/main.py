@@ -28,35 +28,32 @@ def change_lights():
         print("lights on")
 
 if __name__ == '__main__':
-    print('1')
     port = serial.Serial("/dev/ttyUSB0", baudrate="115200", timeout=3.0)
 
     mycursor = mydb.cursor()
 
-    # rcv = port.readline().decode('utf-8').rstrip()
-    # print(rcv)
-
     while True:
         rcv = port.readline().decode('utf-8').rstrip()
-        print(rcv)
-        if(rcv == "hoi2"):
+
+        if "add" in rcv:
+            roomID = rcv.split()[1]
+            mycursor.execute("INSERT INTO rooms (roomID) VALUES (" + roomID + ")")
+            mydb.commit()
+
+        if "+1" in rcv:
             print("detected2")
-            mycursor.execute("UPDATE rooms SET people = people +1;")
+            roomID = rcv.split()[0]
+            mycursor.execute("UPDATE rooms SET people = people +1 WHERE roomID =" + roomID + ";")
             mydb.commit()
             os.system("python mqtt+1.py")
             rcv = 0
-            
-    
-        if(rcv == "hoi1"):
+                
+        if '-1' in rcv:
             print("detected1")
-            mycursor.execute("UPDATE detect SET people = people -1;")
-            os.system("/python/python mqtt.py")
+            roomID = rcv.split()[0]
+            mycursor.execute("UPDATE rooms SET people = people -1 WHERE roomID =" + roomID + ";")
             mydb.commit()
+            os.system("/python/python mqtt.py")
             rcv = 0
-
-            # if(wait_until(rcv, 5000, "gate1")):
-            #     mycursor.execute("UPDATE rooms SET people = amount -1;")
-            #     mydb.commit()
-            #     change_lights()   
 
     mydb.close()
