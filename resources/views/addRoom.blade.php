@@ -9,6 +9,15 @@
 <body>
     <form class="addRoomForm" action="/room" method="POST">
         @csrf
+        <section>
+            <label for="roomID">Kamer Nummer</label><br>
+            <select name="roomID" id="roomID">
+                @foreach ($rooms as $room)
+                    <option value="{{$room->roomID}}">{{$room->roomID}}</option> 
+                @endforeach
+            </select>
+        </section>
+
         <section class="roomNameSection">
             <label for="roomNameField">Kamer Naam</label><br>
             <input id="roomNameField" name="roomName" type="text"><br>

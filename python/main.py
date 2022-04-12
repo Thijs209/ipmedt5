@@ -34,10 +34,10 @@ if __name__ == '__main__':
 
     while True:
         rcv = port.readline().decode('utf-8').rstrip()
-
+        print(rcv)
         if "add" in rcv:
             roomID = rcv.split()[1]
-            mycursor.execute("INSERT INTO rooms (roomID) VALUES (" + roomID + ")")
+            mycursor.execute("INSERT INTO rooms (roomID) VALUES ('" + roomID + "')")
             mydb.commit()
 
         if "+1" in rcv:

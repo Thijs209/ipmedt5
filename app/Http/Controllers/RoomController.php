@@ -14,6 +14,7 @@ class RoomController extends Controller
     }
 
     public function store(Request $request, \App\Models\Room $room){
+        $room = \App\Models\Room::all()->where('roomID', $request->input('roomID'))->first();
         $room->roomName = $request->input('roomName');
         $room->people = $request->input('people');
 
@@ -26,6 +27,8 @@ class RoomController extends Controller
     }
 
     public function create(){
-        return view('addRoom');
+        return view('addRoom', [
+            'rooms'=> \App\Models\Room::all()
+        ]);
     }
 }
