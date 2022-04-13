@@ -18,15 +18,11 @@ char packetBuffer[255];
 //important variables
 bool check_in= false;
 bool check_out= false;
-int data=0;
-char object=' ';
-bool pressed = false;
 long check_time= 0;
 int aantal_mensen=0;
 long Time=0;
 String msg;
 
- 
 void setup() {
   // Setup serial port
   Serial.begin(115200);
@@ -42,62 +38,56 @@ void setup() {
   UDP.begin(UDP_PORT);
   Serial.print("Listening on UDP port ");
   Serial.println(UDP_PORT);
- 
 }
  
 void loop() {
-  // Receive packet
+  Time = millis();
+  readPacket();
+  goIn("gate1", "gate2", "Room1");
+  goOut("gate2", "gate1", "Room1");
+}
+
+void readPacket(){
   UDP.parsePacket();
   UDP.read(packetBuffer, 255);
   msg = String(packetBuffer); 
+}
 
-  Time = millis();
-
+void goIn(String D1, String D2, String roomID){
   //walk in the room
-  //check first detector
-  //for second door copy till line 102 paste and replace gate names
-  if (msg == "gate1"){
+  if (msg == D1){
     check_time= Time;
     check_in= true;
-
     while(Time<check_time+1200){
       // Receive packet
-    UDP.parsePacket();
-    UDP.read(packetBuffer, 255);
-    msg = String(packetBuffer); 
-
-    Time = millis();
-    //check second detector
-      if(msg == "gate2"){
-        aantal_mensen++;
-        Serial.println("+1");
+      readPacket(); 
+      Time = millis();
+      //check second detector
+      if(msg == D2){
+        Serial.println(roomID + "-1");
         check_out=true;
         delay(200);
       }
     }
-  }
+  } 
+}
 
-  //wal out of the room
+void goOut(String D1, String D2, String roomID){
+   //walk out of the room
   //check second detector
-  if (msg == "gate2"){
+  if (msg == D1){
     check_time= Time;
     check_out= false;
-
     while(Time<check_time+1200){
-
       // Receive packet
-      UDP.parsePacket();
-      UDP.read(packetBuffer, 255);
-      msg = String(packetBuffer); 
+      readPacket();
       Time = millis();
-
       //check first detector
-      if(msg == "gate1"){
-        aantal_mensen--;
-        Serial.println("-1");
+      if(msg == D2){
+        Serial.println(roomID + " -1");
         check_in=false;
         delay(200);
       }
     }
-  } 
+  }
 }
