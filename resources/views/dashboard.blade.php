@@ -1,39 +1,45 @@
-<!DOCTYPE html>
-<html lang="nl">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/main.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
-    <title>Lightly | Lampen</title>
-</head>
-<body>
-    <header><!--Lightly--><!--helemaal rechts: link naar logs-->
-        <h1>Lightly</h1>
-        <button id="naar_log" type="button" onclick="window.location='logs.html'">Logs</button>
-    </header>
-    <main>
+@extends('default')
+
+@section('title')
+    {{"Lightly - Dashboard"}}
+@endsection
+@section('content')
+
+@section('script')
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://js.pusher.com/7.0/pusher.min.js"></script>
+<script>
+    var pusher = new Pusher('45da88aa7f5d38d338c4', {
+    cluster: 'eu'
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('dashboard-update', function() {
+        location.reload();
+    });
+</script>
+@endsection('script')
+<main>
         @foreach($room as $lightRoom)
-            <section id="woonkamer_knop" class="lamp_sectie" type="button" state="off" onclick="lamp_toggle(this)">
+            <section class="lamp_sectie">
                 <form class="lamp_knop">
-                    <figure id="woonkamer_bol" class="lamp_bol"></figure>
-                    <img id="woonkamer_img" class="lamp_img" src="img/light-bulb_uit.png" alt="Knop die aangeeft of een lamp aan of uit staat." width="111" height="104">
+                    <figure class="lamp_bol"></figure>
+                    @if ($lightRoom->people == 0) 
+                    <img class="lamp_img" src="img/light-bulb_uit.png" alt="De lamp staat uit." width="111" height="104">
+                    @else
+                    <img class="lamp_img" src="img/light-bulb_aan.png" alt="De lamp staat aan." width="111" height="104">
+                    @endif
                 </form>
-                <p id="woonkamer_callibreer" onclick="callibreren()">callibreer</p>
-                <h2 id="woonkamer_tekst">{{$lightRoom->roomName}}</h2>
-                <p id="woonkamer_aantalMensen" data-quantity="0">aantal mensen: {{$lightRoom->people}}</p>
-                <form action='/update' method='POST'>
+                <h2 class="lamp_tekst">{{$lightRoom->roomName}}</h2>
+                <p class="lamp_aantalMensen" data-quantity="0">aantal mensen: {{$lightRoom->people}}</p>
+                <form class="aanpassen" action='/update' method='POST'>
                     @csrf
                     <label for='people'>Personen aanpassen</label>
-                    <input class="invullen" id='people' name='people' type='number'}>
-                    <input type='hidden' id='roomName' name='roomName' value='{{$lightRoom->roomName}}'>
-                    <input type='submit'>Wijzig</input>
+                    <input class="invullen" name='people' type='number' value=0>
+                    <input type='hidden' name='roomName' value='{{$lightRoom->roomName}}'>
+                    <input class="wijzig" type='submit' value="Wijzig"></input>
                 </form>
             </section>
         @endforeach
     </main>
-</body>
-</html>
+@endsection
