@@ -13,18 +13,18 @@
 <body>
     <header><!--Lightly--><!--helemaal rechts: link naar logs-->
         <h1>Lightly</h1>
-        <button id="naar_log" type="button" onclick="window.location='logs.html'">Logs</button>
+        <button class="naar_log" type="button" onclick="window.location='logs.html'">Logs</button>
     </header>
     <main>
         @foreach($room as $lightRoom)
-            <section id="woonkamer_knop" class="lamp_sectie" type="button" state="off" onclick="lamp_toggle(this)">
+            <section class="lamp_sectie" type="button" state="off" onclick="lamp_toggle(this)">
                 <form class="lamp_knop">
-                    <figure id="woonkamer_bol" class="lamp_bol"></figure>
-                    <img id="woonkamer_img" class="lamp_img" src="img/light-bulb_uit.png" alt="Knop die aangeeft of een lamp aan of uit staat." width="111" height="104">
+                    <figure class="lamp_bol"></figure>
+                    <img class="lamp_img" src="img/light-bulb_uit.png" alt="Knop die aangeeft of een lamp aan of uit staat." width="111" height="104">
                 </form>
-                <p id="woonkamer_callibreer" onclick="callibreren()">callibreer</p>
-                <h2 id="woonkamer_tekst">{{$lightRoom->roomName}}</h2>
-                <p id="woonkamer_aantalMensen" data-quantity="0">aantal mensen: {{$lightRoom->people}}</p>
+                <p class="lamp_callibreer" onclick="callibreren()">callibreer</p>
+                <h2 class="lamp_tekst">{{$lightRoom->roomName}}</h2>
+                <p class="lamp_aantalMensen" data-quantity="0">aantal mensen: {{$lightRoom->people}}</p>
                 <form action='/update' method='POST'>
                     @csrf
                     <label for='people'>Personen aanpassen</label>
