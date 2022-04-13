@@ -13,7 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [\App\Http\Controllers\RoomController::class, 'show']);
+Route::get('/', [\App\Http\Controllers\RoomController::class, 'index']);
+Route::post('/update', [\App\Http\Controllers\RoomController::class, 'update']);
 
 Route::get('/addRoom', [\App\Http\Controllers\RoomController::class, 'create']);
 
