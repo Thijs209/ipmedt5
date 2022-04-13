@@ -1,5 +1,6 @@
 from cProfile import run
 from multiprocessing.connection import wait
+from nis import cat
 import serial
 import os
 
@@ -37,23 +38,32 @@ if __name__ == '__main__':
         print(rcv)
         if "add" in rcv:
             roomID = rcv.split()[1]
-            mycursor.execute("INSERT INTO rooms (roomID) VALUES ('" + roomID + "')")
-            mydb.commit()
+            try:
+                mycursor.execute("INSERT INTO rooms (roomID) VALUES ('" + roomID + "')")
+                mydb.commit()
+            except:
+                print(roomID + 'bestaat al')
 
         if "+1" in rcv:
             print("detected2")
             roomID = rcv.split()[0]
-            mycursor.execute("UPDATE rooms SET people = people +1 WHERE roomID =" + roomID + ";")
-            mydb.commit()
-            os.system("python mqtt+1.py")
+            try:
+                mycursor.execute("UPDATE rooms SET people = people +1 WHERE roomID =" + roomID + ";")
+                mydb.commit()
+                os.system("python mqtt+1.py")
+            except:
+                print(roomID + "bestaat niet")
             rcv = 0
                 
         if '-1' in rcv:
             print("detected1")
             roomID = rcv.split()[0]
-            mycursor.execute("UPDATE rooms SET people = people -1 WHERE roomID =" + roomID + ";")
-            mydb.commit()
-            os.system("/python/python mqtt.py")
+            try:
+                mycursor.execute("UPDATE rooms SET people = people -1 WHERE roomID =" + roomID + ";")
+                mydb.commit()
+                os.system("/python/python mqtt.py")
+            except:
+                print(roomID + "bestaat niet")
             rcv = 0
 
     mydb.close()
