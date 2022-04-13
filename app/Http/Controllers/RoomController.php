@@ -10,7 +10,7 @@ class RoomController extends Controller
 {
 
     public function index(){
-        return view('dashboard-copy', [
+        return view('dashboard', [
             'room' => \App\Models\Room::all()
         ]);
     }
