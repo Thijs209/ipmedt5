@@ -16,8 +16,9 @@ class CreateRoomsTable extends Migration
         Schema::create('rooms', function (Blueprint $table) {
             $table->string('id');
             $table->primary('id');
-
             $table->string('roomName')->default('nieuwe kamer');
+            $table->integer('domoticz_idx')->default(0);
+            $table->unique("domoticz_idx");
             $table->integer('people')->default(0);
             $table->timestamps();
             $table->boolean('light_status')->default(0);

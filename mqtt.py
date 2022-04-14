@@ -3,7 +3,7 @@ import paho.mqtt.client as paho
 import json
 
 
-def change_lights(aan, roomID):
+def change_lights(aan, index):
     # setting callbacks for different events to see if it works, print the message etc.
     def on_connect(client, userdata, flags, rc, properties=None):
         print("CONNACK received with code %s." % rc)
@@ -42,15 +42,16 @@ def change_lights(aan, roomID):
     client.subscribe("domoticz/in", qos=1)
 
     # a single publish, this can also be done in loops, etc.
-    temp = '0'
-    print(aan)
+    light = '0'
     if aan == 'True':
-        temp = '100'
+        light = 'On'
     else:
-        temp = '1'
-        
+        light = 'Off'
+
     client.publish("encyclopedia/temperature", payload="cold", qos=1)
-    client.publish("domoticz/in", json.dumps({'idx' : 1, 'nvalue' : 0, 'svalue' : temp}), qos=1)
+    # client.publish("domoticz/in", json.dumps({'idx' : 1, 'nvalue' : 0, 'svalue' : temp}), qos=1)
+    client.publish("domoticz/in", json.dumps({"command": "switchlight", 'idx': int(index), 'switchcmd': light}), qos=1)
+
     sys.exit('sent')
 
 if __name__ == '__main__':
