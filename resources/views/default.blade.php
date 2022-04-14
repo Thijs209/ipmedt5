@@ -14,7 +14,7 @@
 <body>
     <header>
         <a href='/'><h1>Lightly</h1></a>
-        <a href='/addRoom' class='header-add'>Kamer Toevoegen</a>
+        <a href='/addRoom' class='header-add'>Kamer Wijzigen</a>
     </header>
         @yield('content')
 </body>

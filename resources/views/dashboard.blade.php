@@ -20,7 +20,7 @@
 </script>
 @endsection('script')
 <main>
-        @foreach($room as $lightRoom)
+        @foreach($rooms as $lightRoom)
             <section class="lamp_sectie">
                 <form class="lamp_knop">
                     <figure class="lamp_bol"></figure>

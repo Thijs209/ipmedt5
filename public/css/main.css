@@ -244,7 +244,7 @@ header h1 {
     padding: 4vw;
 }
 
-.add-form input[type=text], .add-form input[type=number] {
+.add-form input {
     width: 100%;
     padding: 12px 20px;
     margin: 8px 0;

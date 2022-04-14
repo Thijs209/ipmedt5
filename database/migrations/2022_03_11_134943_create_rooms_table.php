@@ -14,11 +14,12 @@ class CreateRoomsTable extends Migration
     public function up()
     {
         Schema::create('rooms', function (Blueprint $table) {
-            $table->id('roomID');
-            $table->string('roomName');
-            $table->integer('people');
-            $table->timestamp('created_at')->useCurrent();
-            $table->timestamp('updated_at')->useCurrent();
+            $table->string('id');
+            $table->primary('id');
+            $table->string('roomName')->default('nieuwe kamer');
+            $table->integer('people')->default(0);
+            $table->timestamps();
+            $table->boolean('light_status')->default(0);
         });
     }
 
