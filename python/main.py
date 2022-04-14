@@ -7,6 +7,17 @@ import os
 import mysql.connector
 import paho.mqtt.client as paho
 
+# Moet nog geïnstalleerd worden -> pip3 install pusher
+import pusher
+
+# Pusher api keys
+pusher_client = pusher.Pusher(
+  app_id=u'1384821',
+  key=u'45da88aa7f5d38d338c4',
+  secret=u'aedd886b667484cba54f',
+  cluster=u'eu'
+)
+
 mydb = mysql.connector.connect(
     host = "localhost",
     user="thijs",
@@ -34,12 +45,16 @@ if __name__ == '__main__':
 
     while True:
         rcv = port.readline().decode('utf-8').rstrip()
+
         print(rcv)
         if "add" in rcv:
             roomID = rcv.split()[1]
             try:
                 mycursor.execute("INSERT INTO rooms (roomID) VALUES ('" + roomID + "')")
                 mydb.commit()
+                
+                # Refreshed het dashboard bij alle clients
+                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
                 
             except:
                 print(roomID + 'bestaat al')
@@ -50,6 +65,8 @@ if __name__ == '__main__':
             try:
                 mycursor.execute("UPDATE rooms SET people = people +1 WHERE id = '" + roomID + "';")
                 mydb.commit()
+                # Refreshed het dashboard bij alle clients
+                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
 
                 if check_people(roomID):
                     os.system("python mqtt.py True " + roomID)
@@ -65,6 +82,8 @@ if __name__ == '__main__':
             try:
                 mycursor.execute("UPDATE rooms SET people = people -1 WHERE id = '" + roomID + "';")
                 mydb.commit()
+                # Refreshed het dashboard bij alle clients
+                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
 
                 if check_people(roomID):
                     os.system("python mqtt.py True " + roomID)

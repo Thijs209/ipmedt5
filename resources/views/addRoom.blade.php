@@ -1,34 +1,27 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    <form class="addRoomForm" action="/room" method="POST">
+@extends('default')
+
+@section('title')
+    {{"Lightly - Kamer toevoegen"}}
+@endsection
+
+@section('content')
+<main class='add-main'>
+    <form action="/room" method="POST" class='add-form'>
         @csrf
-        <section>
-            <label for="roomID">Kamer Nummer</label><br>
-            <select name="roomID" id="roomID">
-                @foreach ($rooms as $room)
-                    <option value="{{$room->roomID}}">{{$room->roomName}}</option> 
-                @endforeach
-            </select>
-        </section>
+        <label for="id">Kamer Nummer</label>
+        <select name="id" id="id">
+            @foreach ($rooms as $room)
+                <option value="{{$room->id}}">{{$room->roomName}}</option>                  
+            @endforeach
+        </select>
 
-        <section class="roomNameSection">
-            <label for="roomNameField">Kamer Naam</label><br>
-            <input id="roomNameField" name="roomName" type="text"><br>
-        </section>
+        <label for="roomNameField">Kamer Naam</label>
+        <input id="roomNameField" name="roomName" type="text">
     
-        <section class="numberPeopleSection">
-            <label for="numberPeopleField">Hoeval mensen zijn er in de kamer?</label><br>
-            <input id="numberPeopleField" name="people" type="number" value="0"><br>
-        </section>
-
+        <label for="numberPeopleField">Hoeval mensen zijn er in de kamer?</label>
+        <input id="numberPeopleField" name="people" type="number" value="0">
+        
         <input type="submit" value="Submit" id="submit">
     </form>
-</body>
-</html>
+</main>
+@endsection('content')
