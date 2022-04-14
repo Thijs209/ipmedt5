@@ -1,9 +1,13 @@
 #include <ESP8266WiFi.h>
 #include <WiFiUdp.h>
+#include <TM1637Display.h>
  
 // Set AP credentials
 #define AP_SSID "TheOtherESP"
 #define AP_PASS "flashmeifyoucan"
+
+#define CLK 14 //D5
+#define DIO 12 //D4
  
 // UDP makes acces point
 WiFiUDP UDP;
@@ -22,8 +26,12 @@ long check_time= 0;
 int aantal_mensen=0;
 long Time=0;
 String msg;
+int conGate = 0;
+
+TM1637Display display(CLK, DIO); 
 
 void setup() {
+  
   // Setup serial port
   Serial.begin(115200);
   Serial.println();
@@ -38,33 +46,52 @@ void setup() {
   UDP.begin(UDP_PORT);
   Serial.print("Listening on UDP port ");
   Serial.println(UDP_PORT);
+
+  display.setBrightness(0x0a); 
+  display.clear();
 }
  
 void loop() {
   Time = millis();
   readPacket();
+  checkConnect();
   goIn("gate1", "gate2", "Room1");
   goOut("gate2", "gate1", "Room1");
 }
 
-void readPacket(){
+String readPacket(){
+  
   UDP.parsePacket();
   UDP.read(packetBuffer, 255);
   msg = String(packetBuffer); 
+  return msg;
+}
+
+void checkConnect(){
+  if(readPacket() == "con"){
+    conGate++;
+    display.showNumberDec(conGate);
+    Serial.println("conGate");
+    Serial.println(conGate);
+  }
+  if(conGate == 0){
+    display.clear();
+    delay(100);
+    display.showNumberDec(0);
+  }
 }
 
 void goIn(String D1, String D2, String roomID){
   //walk in the room
-  if (msg == D1){
+  if (readPacket() == D1){
     check_time= Time;
     check_in= true;
     while(Time<check_time+1200){
       // Receive packet
-      readPacket(); 
       Time = millis();
       //check second detector
-      if(msg == D2){
-        Serial.println(roomID + "-1");
+      if(readPacket() == D2){
+        Serial.println(roomID + " +1");
         check_out=true;
         delay(200);
       }
@@ -75,7 +102,7 @@ void goIn(String D1, String D2, String roomID){
 void goOut(String D1, String D2, String roomID){
    //walk out of the room
   //check second detector
-  if (msg == D1){
+  if (readPacket() == D1){
     check_time= Time;
     check_out= false;
     while(Time<check_time+1200){
@@ -83,7 +110,7 @@ void goOut(String D1, String D2, String roomID){
       readPacket();
       Time = millis();
       //check first detector
-      if(msg == D2){
+      if(readPacket() == D2){
         Serial.println(roomID + " -1");
         check_in=false;
         delay(200);

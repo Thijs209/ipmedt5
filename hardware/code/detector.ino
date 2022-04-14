@@ -61,21 +61,14 @@ void setup() {
   
   //load and calibrate sensor
   Serial.println("loading sensors");
-  UDP.beginPacket(remote_IP, UDP_PORT);
-  UDP.write("calB");
-  UDP.endPacket();
-  delay(10);
-  UDP.beginPacket(remote_IP, UDP_PORT);
-  UDP.write("00000");
-  UDP.endPacket();
   avgS1 = calibrateSensor(trigPinS1, echoPinS1);
   avgS2 = calibrateSensor(trigPinS2, echoPinS2);
+
   UDP.beginPacket(remote_IP, UDP_PORT);
-  UDP.write("calD");
+  UDP.write("con");
   UDP.endPacket();
-  delay(10);
   UDP.beginPacket(remote_IP, UDP_PORT);
-  UDP.write("00000");
+  UDP.write("0000");
   UDP.endPacket();
 }
 
@@ -84,6 +77,7 @@ void loop() {
   checkDistance();
   delay(100);
 }
+
 
 //check dinstance
 void checkDistance(){
@@ -102,10 +96,10 @@ void checkDistance(){
     detected = detected + 1;
     Serial.println(detected);
   }
-  if(detected >= 5){
+  if(detected >= 2){
     Serial.print("detected");
     UDP.beginPacket(remote_IP, UDP_PORT);
-    UDP.write("gate1"); //name of detector, for seconde detector gate2, thirde gate3 etc..
+    UDP.write("gate2"); //name of detector, for seconde detector gate2, thirde gate3 etc..
     UDP.endPacket();
     delay(10);
     UDP.beginPacket(remote_IP, UDP_PORT);
