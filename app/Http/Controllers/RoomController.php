@@ -35,6 +35,7 @@ class RoomController extends Controller
         $room = \App\Models\Room::all()->where('id', $request->input('id'))->first();
         $room->roomName = $request->input('roomName');
         $room->people = $request->input('people');
+        $room->domoticz_idx = $request->input('indexField');
 
         try{
             $room->save();

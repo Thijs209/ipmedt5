@@ -39,14 +39,24 @@ def check_people(roomID):
         return True
 
 if __name__ == '__main__':
-    mycursor = mydb.cursor(buffered = True)
-
     port = serial.Serial("/dev/ttyUSB1", baudrate="115200", timeout=3.0)
+    on = False
 
     while True:
+        mydb = mysql.connector.connect(
+            host = "localhost",
+            user="thijs",
+            passwd="",
+            database="light_control"
+        )
+
+        mycursor = mydb.cursor(buffered = True)
+
+        mycursor.execute("SELECT id FROM rooms")
+        roomIDs = mycursor.fetchall()
+
         rcv = port.readline().decode('utf-8').rstrip()
 
-        print(rcv)
         if "add" in rcv:
             roomID = rcv.split()[1]
             try:
@@ -54,7 +64,7 @@ if __name__ == '__main__':
                 mydb.commit()
                 
                 # Refreshed het dashboard bij alle clients
-                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
+                pusher_client.trigger(u'my-channel', u'dashboard-update', [])
                 
             except:
                 print(roomID + 'bestaat al')
@@ -66,12 +76,7 @@ if __name__ == '__main__':
                 mycursor.execute("UPDATE rooms SET people = people +1 WHERE id = '" + roomID + "';")
                 mydb.commit()
                 # Refreshed het dashboard bij alle clients
-                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
-
-                if check_people(roomID):
-                    os.system("python mqtt.py True " + roomID)
-                else:
-                    os.system("python mqtt.py False " + roomID)
+                pusher_client.trigger(u'my-channel', u'dashboard-update', [])
             except:
                 print(roomID + " bestaat niet")
 
@@ -83,15 +88,23 @@ if __name__ == '__main__':
                 mycursor.execute("UPDATE rooms SET people = people -1 WHERE id = '" + roomID + "';")
                 mydb.commit()
                 # Refreshed het dashboard bij alle clients
-                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
-
-                if check_people(roomID):
-                    os.system("python mqtt.py True " + roomID)
-                else:
-                    os.system("python mqtt.py False " + roomID)
+                pusher_client.trigger(u'my-channel', u'dashboard-update', [])
             except:
                 print(roomID + "bestaat niet")
             rcv = ""
+
+        for roomID in roomIDs:
+            mycursor.execute("SELECT people FROM rooms WHERE id = '" + roomID[0] + "'")
+            people = mycursor.fetchone()
+
+            mycursor.execute("SELECT domoticz_idx FROM rooms WHERE id = '" + roomID[0] + "'")
+            index = mycursor.fetchone()
+            if check_people(roomID[0]):
+                os.system("python mqtt.py True " + str(index[0]))
+                on = True
+            else:
+                os.system("python mqtt.py False " + str(index[0]))
+                on = False
 
     mydb.close()
 
