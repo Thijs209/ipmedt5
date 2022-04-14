@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="master.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poiret+One&display=swap" rel="stylesheet">
+    <title>Lightly | Lampen</title>
+</head>
+<body>
+    <header><!--Lightly--><!--helemaal rechts: link naar logs-->
+        <h1>Lightly</h1>
+        <button id="naar_log" type="button" onclick="window.location='logs.html'">Logs</button>
+    </header>
+    <main><!--Knoppen: Lamp->onclick: lampknop aangeklikt; naam kamer-->
+        <button id="woonkamer_knop" class="lamp_knop" type="button" state="off" onclick="lamp_toggle(this)">
+            <figure id="woonkamer_bol" class="lamp_bol"></figure>
+            <img id="woonkamer_img" class="lamp_img" src="img/light-bulb_uit.png" alt="Knop die aangeeft of een lamp aan of uit staat." width="111" height="104">
+            <figure id="woonkamer_bol" class="lamp_bol"></figure>
+            <p id="woonkamer_callibreer" onclick="callibreren()">callibreer</p>
+            <h2 id="woonkamer_tekst">Woonkamer</h2>
+            <p id="woonkamer_aantalMensen" data-quantity="0">aantal mensen: </p><!--moet ingevuld vanuit js-->
+        </button>
+        <!--uit te breiden vanuit js versie 2-->
+    </main>
+</body>
+</html>

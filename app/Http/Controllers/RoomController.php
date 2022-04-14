@@ -8,7 +8,6 @@ use DB;
 
 class RoomController extends Controller
 {
-
     public function index(){
         return view('dashboard', [
             'rooms' => \App\Models\Room::all()
@@ -42,6 +41,22 @@ class RoomController extends Controller
             return redirect('/');
         } catch(Exception $e){
             return redirect('/addRoom');
+        }
+    }
+
+    public function lightSwitch(Request $request, \App\Models\Room $room){
+        if($room::where('id', $request->id)->first()->light_status == False) {
+            $newStatus = True;
+        } else {
+            $newStatus = False;
+        }
+
+        try{
+            $room::where('id', $request->id)->update(['light_status' => $newStatus]);
+            event(new UpdateData());
+            return redirect('/');
+        } catch(Exception $e){
+            return redirect('/');
         }
     }
 }
