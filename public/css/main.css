@@ -42,6 +42,7 @@ header {
 
 main {
     background-color: var(--color-background);
+    min-height: calc(100vh - var(--header-height));
     display: grid;
     grid-template-columns: calc( 100vw - 2 * var(--gap-size));
     grid-template-rows: calc( 100vw - 2 * var(--gap-size) + 5.4em );
@@ -203,7 +204,7 @@ header h1 {
 
 @media only screen and (min-width: 950px) {
     :root {
-        --gap-size: 7vw;
+        --gap-size: 8vw;
     }
 
     .lamp_img {
