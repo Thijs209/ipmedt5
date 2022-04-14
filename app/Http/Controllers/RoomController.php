@@ -8,7 +8,6 @@ use DB;
 
 class RoomController extends Controller
 {
-
     public function index(){
         return view('dashboard', [
             'rooms' => \App\Models\Room::all()

@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoomsTable extends Migration
+class CreateDetectorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +13,9 @@ class CreateRoomsTable extends Migration
      */
     public function up()
     {
-        Schema::create('rooms', function (Blueprint $table) {
-            $table->string('id');
-            $table->primary('id');
-
-            $table->string('roomName')->default('nieuwe kamer');
-            $table->integer('people')->default(0);
+        Schema::create('detectors', function (Blueprint $table) {
+            $table->string("id");
             $table->timestamps();
-            $table->boolean('light_status')->default(0);
         });
     }
 
@@ -31,6 +26,6 @@ class CreateRoomsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rooms');
+        Schema::dropIfExists('detectors');
     }
 }

@@ -46,11 +46,9 @@ main {
     display: grid;
     grid-template-columns: calc( 100vw - 2 * var(--gap-size));
     grid-template-rows: calc( 100vw - 2 * var(--gap-size) + 5.4em );
-    row-gap: var(--gap-size);
-    column-gap: var(--gap-size);
-    padding: var(--gap-size);
-    position: relative;
-}
+
+    grid-template-columns: 1fr;
+    grid-template-rows: calc( 100vw - 2 * var(--gap-size) + 4em );
 
 .lamp_sectie {
     background-color: var(--color-white);
