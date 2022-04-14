@@ -21,4 +21,7 @@ Route::post('/update', [\App\Http\Controllers\RoomController::class, 'update']);
 Route::get('/addRoom', [\App\Http\Controllers\RoomController::class, 'create']);
 
 Route::post('/room', [\App\Http\Controllers\RoomController::class, 'store']);
+
+Route::post('/light-switch', [\App\Http\Controllers\RoomController::class, 'lightSwitch']);
+
 // Route::get('/addRoom/{roomName}/{number}', [\App\Http\Controllers\RoomController::class, 'add']);

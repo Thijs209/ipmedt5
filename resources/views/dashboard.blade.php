@@ -22,13 +22,16 @@
 <main>
         @foreach($rooms as $lightRoom)
             <section class="lamp_sectie">
-                <form class="lamp_knop">
+                <form class="lamp_knop" method='POST' action='/light-switch'>
+                    @csrf
                     <figure class="lamp_bol"></figure>
-                    @if ($lightRoom->people == 0) 
-                    <img class="lamp_img" src="img/light-bulb_uit.png" alt="De lamp staat uit." width="111" height="104">
+                    @if ($lightRoom->light_status == 0) 
+                        <img class="lamp_img" src="img/light-bulb_uit.png" alt="De lamp staat uit." width="111" height="104">
                     @else
-                    <img class="lamp_img" src="img/light-bulb_aan.png" alt="De lamp staat aan." width="111" height="104">
+                        <img class="lamp_img" src="img/light-bulb_aan.png" alt="De lamp staat aan." width="111" height="104">
                     @endif
+                    <input type='hidden' name='id' value='{{$lightRoom->id}}'>
+                    <input class='light-button' type='submit' value=''>
                 </form>
                 <h2 class="lamp_tekst">{{$lightRoom->roomName}}</h2>
                 <p class="lamp_aantalMensen" data-quantity="0">aantal mensen: {{$lightRoom->people}}</p>
@@ -37,7 +40,7 @@
                     <label for='people'>Personen aanpassen</label>
                     <input class="invullen" name='people' type='number' value=0>
                     <input type='hidden' name='roomName' value='{{$lightRoom->roomName}}'>
-                    <input class="wijzig" type='submit' value="Wijzig"></input>
+                    <input class="wijzig" type='submit' value="Wijzig">
                 </form>
             </section>
         @endforeach

@@ -265,3 +265,16 @@ header h1 {
     border-radius: 4px;
     cursor: pointer;
   }
+
+.light-button {
+    width: calc(0.7 * ( 100vw - 5 * var(--gap-size) ) / 4 );
+    height: calc(0.7 * ( 100vw - 5 * var(--gap-size) ) / 4 );
+    position: relative;
+    border-radius: 50%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border: none;
+    background: transparent;
+}

@@ -15,7 +15,15 @@ class roomsSeeder extends Seeder
     public function run()
     {
         DB::table('rooms')->insert([
-            'id' => '1'
+            'id' => '1',
+        ]);
+
+        DB::table('rooms')->insert([
+            'id' => '2',
+        ]);
+
+        DB::table('rooms')->insert([
+            'id' => '3',
         ]);
     }
 }
