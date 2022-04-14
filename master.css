@@ -1,0 +1,169 @@
+* {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poiret One', sans-serif;
+}
+
+:root {
+    --color-white: #ffffff;
+    --color-blue: #3a627a;
+    --color-background: #EFEFEF;
+    --header-height: 27vw;
+    --gap-size: 27vw;
+}
+
+header {
+    width: 100vw;
+    height: var(--header-height);
+    position: relative;
+}
+
+main {
+    background-color: var(--color-background);
+    height: calc(100vh - var(--header-height));
+    display: grid;
+    grid-template-columns: 0 calc( 100vw - 2 * var(--gap-size) );
+    grid-template-rows: 0 calc( 100vw - 2 * var(--gap-size) + 3em );
+    row-gap: var(--gap-size);
+    column-gap: var(--gap-size);
+    position: relative;
+}
+
+button {
+    background-color: var(--color-white);
+    border-style: none;
+    position: absolute;
+}
+.lamp_knop {
+    display: grid;
+    grid-template-rows: calc( ( 100vw - 2 * var(--gap-size) ) ) 1fr 1fr;
+    width: 100%;
+    align-items: center;
+    justify-items: center;
+    position: relative;
+}
+#woonkamer_knop {
+    grid-row: 2;
+    grid-column: 2;
+}
+#naar_log {
+    position: absolute;
+    right: 20vw;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.lamp_bol {
+    width: 70%;
+    height: 70%;
+    border-radius: 50%;
+    background-color: var(--color-blue);
+    grid-row: 1;
+    grid-column: 1;
+}
+
+.lamp_img {
+    transform: scale(0.7);
+    grid-row: 1;
+    grid-column: 1;
+    position: relative;
+}
+
+header > h1 {
+    top: 50%;
+    left: 20vw;
+    transform: translateY(-50%);
+    position: absolute;
+}
+h2 {
+    color: var(--color-white);
+    width: 100%;
+    background-color: var(--color-blue);
+    grid-row: 2;
+    grid-column: 1;
+}
+#woonkamer_callibreer {
+    grid-row: 1 / 2;
+    grid-column: 1 / 2;
+    position: absolute;
+    justify-self: end;
+    align-self: end;
+}
+
+@media only screen and (min-width: 450px) {
+    :root {
+        --header-height: 130px;
+        --gap-size: 10vw;
+    }
+    
+    main {
+        grid-template-columns: 0 repeat(2, calc( ( 100vw - 3 * var(--gap-size) ) / 2) );
+        grid-template-rows: 0 calc( ( 100vw - 3 * var(--gap-size) ) / 2 + 3em);
+    }
+    
+    .lamp_knop {
+        grid-template-rows: calc( ( 100vw - 3 * var(--gap-size) ) / 2) 1fr 1fr;
+    }
+
+    .lamp_img {
+        transform: scale(0.8);
+    }
+
+    p, button {
+        font-size: 15px;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .lamp_img {
+        transform: scale(1);
+    }
+
+    h1 {
+        font-size: 35px;
+    }
+    p, button {
+        font-size: 16px;
+    }
+}
+
+@media only screen and (min-width: 800px) {
+    main {
+        grid-template-columns: 0 repeat(3, calc( ( 100vw - 4 * var(--gap-size) ) / 3) );
+        grid-template-rows: 0 calc( ( 100vw - 4 * var(--gap-size) ) / 3 + 3em);
+    }
+    
+    .lamp_knop {
+        grid-template-rows: calc( ( 100vw - 4 * var(--gap-size) ) / 3) 1fr 1fr;
+    }
+
+    .lamp_img {
+        transform: scale(0.8);
+    }
+
+}
+
+@media only screen and (min-width: 950px) {
+    :root {
+        --gap-size: 8vw;
+    }
+
+    .lamp_img {
+        transform: scale(0.9);
+    }
+}
+
+@media only screen and (min-width: 1000px) {
+    main {
+        grid-template-columns: 0 repeat(4, calc( ( 100vw - 5 * var(--gap-size) ) / 4) );
+        grid-template-rows: 0 calc( ( 100vw - 5 * var(--gap-size) ) / 4 + 3em);
+    }
+    
+    .lamp_knop {
+        grid-template-rows: calc( ( 100vw - 5 * var(--gap-size) ) / 4) 1fr 1fr;
+    }
+
+    .lamp_img {
+        transform: scale(0.8);
+    }
+}

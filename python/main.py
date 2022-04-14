@@ -1,9 +1,11 @@
+from cProfile import run
 from multiprocessing.connection import wait
+from nis import cat
 import serial
 import os
 
-import time
 import mysql.connector
+import paho.mqtt.client as paho
 
 # Moet nog geïnstalleerd worden -> pip3 install pusher
 import pusher
@@ -23,52 +25,74 @@ mydb = mysql.connector.connect(
     database="light_control"
 )
 
-def wait_until(rcv, timeout, condition, period=0.25):
-  mustend = time.time() + timeout
-  while time.time() < mustend:
-    if (rcv == condition): 
-        return True
-    time.sleep(period)
-  return False
+def check_people(roomID):
+    mycursor.execute("SELECT people FROM rooms WHERE id = '" + roomID + "'")
+    people = mycursor.fetchone()
+    print(people[0])
+    if people[0] < 0:
+        mycursor.execute("UPDATE rooms SET people = 0 WHERE id = '" + roomID + "';")
+        mydb.commit()
 
-def change_lights():
-    if(mycursor.execute("SELECT people FROM rooms") <= 0):
-        print("lights out")
+    if people[0] == 0:
+        return False
     else:
-        print("lights on")
+        return True
 
 if __name__ == '__main__':
-    print('1')
+    mycursor = mydb.cursor(buffered = True)
+
     port = serial.Serial("/dev/ttyUSB1", baudrate="115200", timeout=3.0)
-
-    mycursor = mydb.cursor()
-
-    # rcv = port.readline().decode('utf-8').rstrip()
-    # print(rcv)
 
     while True:
         rcv = port.readline().decode('utf-8').rstrip()
-        if(rcv == "gate1"):
-            print("detected")
-            mycursor.execute("UPDATE rooms SET people = people +1;")
-            mydb.commit()
-            rcv = 0
 
-            # Refreshed het dashboard bij alle clients
-            # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
-            
-    
-        if(rcv == "gate2"):
-            print("detected")
-            mycursor.execute("UPDATE detect SET gate_2 = true;")
-            rcv = 0
+        print(rcv)
+        if "add" in rcv:
+            roomID = rcv.split()[1]
+            try:
+                mycursor.execute("INSERT INTO rooms (roomID) VALUES ('" + roomID + "')")
+                mydb.commit()
+                
+                # Refreshed het dashboard bij alle clients
+                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
+                
+            except:
+                print(roomID + 'bestaat al')
+            rcv = ""
 
-            # Refreshed het dashboard bij alle clients
-            # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
+        if "+1" in rcv:
+            roomID = rcv.split()[0]
+            try:
+                mycursor.execute("UPDATE rooms SET people = people +1 WHERE id = '" + roomID + "';")
+                mydb.commit()
+                # Refreshed het dashboard bij alle clients
+                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
 
-            # if(wait_until(rcv, 5000, "gate1")):
-            #     mycursor.execute("UPDATE rooms SET people = amount -1;")
-            #     mydb.commit()
-            #     change_lights()   
+                if check_people(roomID):
+                    os.system("python mqtt.py True " + roomID)
+                else:
+                    os.system("python mqtt.py False " + roomID)
+            except:
+                print(roomID + " bestaat niet")
+
+            rcv = ""
+                
+        if '-1' in rcv:
+            roomID = rcv.split()[0]
+            try:
+                mycursor.execute("UPDATE rooms SET people = people -1 WHERE id = '" + roomID + "';")
+                mydb.commit()
+                # Refreshed het dashboard bij alle clients
+                # pusher_client.trigger(u'my-channel', u'dashboard-update', [])
+
+                if check_people(roomID):
+                    os.system("python mqtt.py True " + roomID)
+                else:
+                    os.system("python mqtt.py False " + roomID)
+            except:
+                print(roomID + "bestaat niet")
+            rcv = ""
 
     mydb.close()
+
+
