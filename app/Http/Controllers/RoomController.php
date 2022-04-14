@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Events\UpdateData;
 use DB;
 
 class RoomController extends Controller
@@ -23,6 +24,7 @@ class RoomController extends Controller
         try{
             $room::where('roomName', $request->roomName)
             ->update(['people' => $request->people]);
+            event(new UpdateData());
             return redirect('/');
         } catch(Exception $e){
             return redirect('/');
