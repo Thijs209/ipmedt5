@@ -25,10 +25,10 @@
                 <form class="lamp_knop" method='POST' action='/light-switch'>
                     @csrf
                     <figure class="lamp_bol"></figure>
-                    @if ($lightRoom->light_status == 0) 
-                        <img class="lamp_img" src="img/light-bulb_uit.png" alt="De lamp staat uit." width="111" height="104">
-                    @else
+                    @if ($lightRoom->light_status == 1||$lightRoom->people !=0) 
                         <img class="lamp_img" src="img/light-bulb_aan.png" alt="De lamp staat aan." width="111" height="104">
+                    @else
+                        <img class="lamp_img" src="img/light-bulb_uit.png" alt="De lamp staat uit." width="111" height="104">
                     @endif
                     <input type='hidden' name='id' value='{{$lightRoom->id}}'>
                     <input class='light-button' type='submit' value=''>
