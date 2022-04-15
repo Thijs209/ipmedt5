@@ -7,8 +7,11 @@
 #define AP_PASS "flashmeifyoucan"
 
 #define CLK 14 //D5
-#define DIO 12 //D4
- 
+#define DIO 12 //D6
+
+///TM1637Display display(CLK, DIO); 
+TM1637Display display(CLK, DIO);
+
 // UDP makes acces point
 WiFiUDP UDP;
 IPAddress local_IP(192,168,4,1);
@@ -28,10 +31,7 @@ long Time=0;
 String msg;
 int conGate = 0;
 
-TM1637Display display(CLK, DIO); 
-
-void setup() {
-  
+void setup() {  
   // Setup serial port
   Serial.begin(115200);
   Serial.println();
@@ -60,7 +60,6 @@ void loop() {
 }
 
 String readPacket(){
-  
   UDP.parsePacket();
   UDP.read(packetBuffer, 255);
   msg = String(packetBuffer); 
@@ -75,6 +74,7 @@ void checkConnect(){
     Serial.println(conGate);
   }
   if(conGate == 0){
+    Serial.println("zero");
     display.clear();
     delay(100);
     display.showNumberDec(0);
