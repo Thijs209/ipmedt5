@@ -39,7 +39,7 @@ def check_people(roomID):
         return True
 
 if __name__ == '__main__':
-    port = serial.Serial("/dev/ttyUSB1", baudrate="115200", timeout=3.0)
+    port = serial.Serial("/dev/ttyUSB0", baudrate="115200", timeout=3.0)
     on = False
 
     while True:
@@ -56,11 +56,11 @@ if __name__ == '__main__':
         roomIDs = mycursor.fetchall()
 
         rcv = port.readline().decode('utf-8').rstrip()
-
+        print(rcv)
         if "add" in rcv:
             roomID = rcv.split()[1]
             try:
-                mycursor.execute("INSERT INTO rooms (roomID) VALUES ('" + roomID + "')")
+                mycursor.execute("INSERT INTO rooms (id) VALUES ('" + roomID + "')")
                 mydb.commit()
                 
                 # Refreshed het dashboard bij alle clients
