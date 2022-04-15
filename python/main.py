@@ -99,12 +99,17 @@ if __name__ == '__main__':
 
             mycursor.execute("SELECT domoticz_idx FROM rooms WHERE id = '" + roomID[0] + "'")
             index = mycursor.fetchone()
-            if check_people(roomID[0]):
-                os.system("python mqtt.py True " + str(index[0]))
-                on = True
-            else:
-                os.system("python mqtt.py False " + str(index[0]))
-                on = False
+
+            mycursor.execute("SELECT light_status FROM rooms WHERE id = '" + roomID[0] + "'")
+            light_status = mycursor.fetchone()
+            
+            if light_status[0] == 0:
+                if check_people(roomID[0]):
+                    os.system("python mqtt.py True " + str(index[0]))
+                    on = True
+                else:
+                    os.system("python mqtt.py False " + str(index[0]))
+                    on = False
 
     mydb.close()
 
