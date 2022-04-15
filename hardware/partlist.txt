@@ -1,0 +1,15 @@
+1 detector bevat:
+1x esp8266
+2x HC-SR04 ultrasoon sensor
+1x pcb 24*10
+2x pcb 28*6
+2x header 4pin
+2x header 15pin
+120cm electradraad 1.5mm
+
+1ontvanger bevat:
+1x esp8266
+1x raspberry pi model 4b 4gb
+1 micro-sd card 32gb
+
+
